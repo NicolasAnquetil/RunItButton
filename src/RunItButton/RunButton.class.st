@@ -111,7 +111,11 @@ RunButton >> noScriptMessage [
 
 { #category : #drawing }
 RunButton >> runCurrentScript [
-	self script value
+	[self script value]
+	on: Exception
+	do: [ :ex |
+		UIManager default inform: 'Received exception:' , String cr , ex description
+	]
 ]
 
 { #category : #accessing }
