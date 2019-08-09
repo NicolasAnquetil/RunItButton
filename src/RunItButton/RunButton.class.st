@@ -116,12 +116,13 @@ RunButton >> noScriptMessage [
 
 { #category : #running }
 RunButton >> runCurrentScript [
-	[self script value ]
+	| result |
+	[ result := self script value ]
 	on: Exception
 	do: [ :ex |
 		^ self inform: 'Received exception:' , String cr , ex description
 	].
-	 self inform: 'Execution raised no exception'
+	 self inform: result asString
 ]
 
 { #category : #accessing }
