@@ -65,11 +65,6 @@ RunButton >> click: anEvent [
 
 ]
 
-{ #category : #accessing }
-RunButton >> defaultScript [
-		^ [ self inform: self noScriptMessage ]
-]
-
 { #category : #running }
 RunButton >> doScript: anInteger [
 	current := anInteger.
@@ -115,12 +110,17 @@ RunButton >> noScriptMessage [
 ]
 
 { #category : #running }
+RunButton >> resetScripts [
+	scripts := OrderedCollection new
+]
+
+{ #category : #running }
 RunButton >> runCurrentScript [
 	| result |
 	[ result := self script value ]
 	on: Exception
 	do: [ :ex |
-		^ self inform: 'Received exception:' , String cr , ex description
+		^ self inform: ex description
 	].
 	 self inform: result asString
 ]
@@ -128,7 +128,7 @@ RunButton >> runCurrentScript [
 { #category : #accessing }
 RunButton >> script [
 	^ scripts 
-		ifEmpty: [ self defaultScript ]
+		ifEmpty: [ Warning signal: self noScriptMessage ]
 		ifNotEmpty: [ scripts at: current]
 ]
 
@@ -144,6 +144,7 @@ RunButton >> scriptMenu [
 	menu := MenuMorph new.
 	menu defaultTarget: self.
 	"menu add: 'Add script' selector: #getNewScript."
+	menu add: 'Clear scripts' selector: #resetScripts.
 	menu add: 'Delete' selector: #delete.
 	menu addLine.
 	i := 1.
