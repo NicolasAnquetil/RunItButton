@@ -1,15 +1,23 @@
 # RunItButton
-A small button to quickly execute a smalltalk expression.
+A small button to quickly execute a smalltalk expression. Its goals are to be lean, non-intrusive and quick to use.
+It is intended to ease the execution of one repetitive task.
 
-Just tell it what expression to evaluate, for example:
+The button is big enough to be easily clicked yet it takes relatively little screen space (compared to a full window). It can be placed anywhere by just dragging it.
 
-```[ Transcript show: 'I am running!']```
+To tell it what expression to evaluate:
+
+```[ Transcript show: 'I am running!']``` (not very interesting)
 
 or:
 
-```[ Smalltalk snapshot: true andQuit: false ]```
+```[ Smalltalk snapshot: true andQuit: false ]``` (saves the image)
 
-and each time you click on it, it evaluates the expression.
+or:
+
+```[ MyTestClass run: #aTestMethod ]``` (runs a test case)
+
+Each time you click on the button, the expression is evaluated.
+That's all.
 
 You can have several expressions and choose the one to run from a menu.
 
