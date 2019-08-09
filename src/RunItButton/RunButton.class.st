@@ -84,11 +84,16 @@ RunButton >> inform: aString [
 { #category : #initialization }
 RunButton >> initialize [
 	super initialize. 
-	current := 0.
-	scripts := OrderedCollection new.
+	self initializeScripts.
 	self
 		extent: 75 @ 75;
 		color: Color green
+]
+
+{ #category : #initialization }
+RunButton >> initializeScripts [
+	current := 0.
+	scripts := OrderedCollection new.
 ]
 
 { #category : #'morphic integration' }
@@ -144,7 +149,7 @@ RunButton >> scriptMenu [
 	menu := MenuMorph new.
 	menu defaultTarget: self.
 	"menu add: 'Add script' selector: #getNewScript."
-	menu add: 'Clear scripts' selector: #resetScripts.
+	menu add: 'Clear scripts' selector: #initializeScripts.
 	menu add: 'Delete' selector: #delete.
 	menu addLine.
 	i := 1.
