@@ -47,14 +47,14 @@ RunButton class >> script: aBlock [
 	instance script: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : #'morphic integration' }
 RunButton >> balloonText [
 	^ scripts 
 		ifEmpty: [ self noScriptMessage ]
 		ifNotEmpty: [ self script asString]
 ]
 
-{ #category : #drawing }
+{ #category : #'morphic integration' }
 RunButton >> click: anEvent [
 	(self formerPosition = anEvent position)
 		ifFalse: [ ^ self ].
@@ -65,20 +65,25 @@ RunButton >> click: anEvent [
 
 ]
 
-{ #category : #initialization }
+{ #category : #accessing }
 RunButton >> defaultScript [
-		^ [ UIManager default inform: self noScriptMessage ]
+		^ [ self inform: self noScriptMessage ]
 ]
 
-{ #category : #drawing }
+{ #category : #running }
 RunButton >> doScript: anInteger [
 	current := anInteger.
 	self runCurrentScript
 ]
 
-{ #category : #drawing }
+{ #category : #'morphic integration' }
 RunButton >> handlesMouseDown: anEvent [ 
     ^ true
+]
+
+{ #category : #running }
+RunButton >> inform: aString [
+	UIManager default inform: aString
 ]
 
 { #category : #initialization }
@@ -91,7 +96,7 @@ RunButton >> initialize [
 		color: Color green
 ]
 
-{ #category : #drawing }
+{ #category : #'morphic integration' }
 RunButton >> mouseDown: anEvent [
 	self formerPosition: anEvent position.
 	anEvent hand
@@ -99,7 +104,7 @@ RunButton >> mouseDown: anEvent [
 		event: anEvent
 ]
 
-{ #category : #drawing }
+{ #category : #'morphic integration' }
 RunButton >> mouseMove: anEvent [
 	anEvent hand grabMorph: self
 ]
@@ -109,13 +114,14 @@ RunButton >> noScriptMessage [
 			^ 'Set a script to run with:', String cr , '`' , self class name asString , ' script: [...]'''
 ]
 
-{ #category : #drawing }
+{ #category : #running }
 RunButton >> runCurrentScript [
-	[self script value]
+	[self script value ]
 	on: Exception
 	do: [ :ex |
-		UIManager default inform: 'Received exception:' , String cr , ex description
-	]
+		^ self inform: 'Received exception:' , String cr , ex description
+	].
+	 self inform: 'Execution raised no exception'
 ]
 
 { #category : #accessing }
@@ -131,7 +137,7 @@ RunButton >> script: aBlock [
 	current := current+1
 ]
 
-{ #category : #drawing }
+{ #category : #'morphic integration' }
 RunButton >> scriptMenu [
 	| menu i |
 	menu := MenuMorph new.
