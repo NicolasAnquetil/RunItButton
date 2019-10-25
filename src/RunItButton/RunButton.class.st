@@ -21,7 +21,8 @@ Class {
 	#superclass : #CircleMorph,
 	#instVars : [
 		'scripts',
-		'current'
+		'current',
+		'catchErrors'
 	],
 	#classInstVars : [
 		'instance'
@@ -85,6 +86,7 @@ RunButton >> inform: aString [
 RunButton >> initialize [
 	super initialize. 
 	self initializeScripts.
+	catchErrors := true.
 	self
 		extent: 75 @ 75;
 		color: Color green
@@ -125,7 +127,10 @@ RunButton >> runCurrentScript [
 	[ result := self script value ]
 	on: Exception
 	do: [ :ex |
-		^ self inform: ex description
+		catchErrors
+			ifTrue: [ result := ex description ]
+			ifFalse: [ result := ex signal ].
+		
 	].
 	 self inform: result asString
 ]
@@ -149,8 +154,11 @@ RunButton >> scriptMenu [
 	menu := MenuMorph new.
 	menu defaultTarget: self.
 	"menu add: 'Add script' selector: #getNewScript."
+	menu
+		add: (catchErrors ifTrue: [ 'Debug script errors' ] ifFalse: [ 'Catch script errors' ] )
+		selector: (catchErrors ifTrue: [ #unsetCatch ] ifFalse: [ #setCatch ] ).
 	menu add: 'Clear scripts' selector: #initializeScripts.
-	menu add: 'Delete' selector: #delete.
+	menu add: 'Exit' selector: #delete.
 	menu addLine.
 	i := 1.
 	scripts do: [ :sc |
@@ -159,4 +167,14 @@ RunButton >> scriptMenu [
 	].
 	menu invokeModal.
 
+]
+
+{ #category : #accessing }
+RunButton >> setCatch [
+	catchErrors := true
+]
+
+{ #category : #accessing }
+RunButton >> unsetCatch [
+	catchErrors := false
 ]
